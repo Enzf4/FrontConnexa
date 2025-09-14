@@ -404,6 +404,7 @@ code {
   padding: 0.5rem;
   border-radius: var(--radius-md);
   transition: all var(--transition-normal);
+  z-index: 999999999999 !important;
 }
 
 .user-dropdown:hover {
@@ -441,6 +442,7 @@ code {
   box-shadow: var(--shadow-lg);
   padding: var(--space-sm);
   animation: dropdownSlideIn 0.2s ease-out;
+  z-index: 999999999999 !important;
 }
 
 .dropdown-item {
@@ -451,6 +453,7 @@ code {
   align-items: center;
   gap: var(--space-sm);
   transition: all var(--transition-normal);
+  z-index: 999999999999 !important;
 }
 
 .dropdown-item:hover {
@@ -461,6 +464,7 @@ code {
 .dropdown-divider {
   border-color: var(--border-primary);
   margin: var(--space-sm) 0;
+  z-index: 999999999999 !important;
 }
 
 @keyframes dropdownSlideIn {
@@ -873,6 +877,7 @@ small,
 
 .user-dropdown-menu .dropdown-toggle::after {
   display: none !important;
+  z-index: 999999999999 !important;
 }
 
 input,

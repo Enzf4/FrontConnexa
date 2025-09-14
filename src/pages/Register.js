@@ -145,7 +145,7 @@ const Register = () => {
             <Card.Body className="p-4">
               <div className="text-center mb-4">
                 <i className="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
-                <h2 className="h4">Connexa</h2>
+                <h2 className="h4 text-white">Connexa</h2>
                 <p className="text-muted">
                   Crie sua conta e comece a estudar em grupo
                 </p>

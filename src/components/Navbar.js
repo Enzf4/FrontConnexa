@@ -105,7 +105,7 @@ const Navbar = () => {
             {/* Dropdown do usuário */}
             <NavDropdown
               title={
-                <span className="d-flex flex-row align-items-center text-white">
+                <span className="d-flex align-items-center text-white">
                   <Avatar
                     avatarId={user.avatar || "avatar-1"}
                     size="small"
@@ -192,12 +192,17 @@ const Navbar = () => {
           border-radius: 0.5rem;
           margin-top: 0.5rem;
           min-width: 200px;
-          z-index: 999999999999999999 !important;
+          z-index: 9999 !important;
         }
 
         .user-dropdown-menu .dropdown-item {
           padding: 0.75rem 1.5rem;
           transition: all 0.2s ease;
+        }
+
+        .user-dropdown-menu .dropdown-item:hover {
+          background-color: #f8f9fa;
+          transform: translateX(2px);
         }
 
         .user-name {
