@@ -1,22 +1,22 @@
-import api from './api';
+import api from "./api";
 
 export const groupService = {
   // Buscar grupos
   async searchGroups(filtros = {}) {
     try {
       const params = new URLSearchParams();
-      Object.keys(filtros).forEach(key => {
+      Object.keys(filtros).forEach((key) => {
         if (filtros[key]) {
           params.append(key, filtros[key]);
         }
       });
-      
+
       const response = await api.get(`/grupos/buscar?${params}`);
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao buscar grupos' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao buscar grupos",
       };
     }
   },
@@ -27,9 +27,9 @@ export const groupService = {
       const response = await api.get(`/grupos/${id}`);
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao obter grupo' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao obter grupo",
       };
     }
   },
@@ -37,12 +37,12 @@ export const groupService = {
   // Criar grupo
   async createGroup(dadosGrupo) {
     try {
-      const response = await api.post('/grupos', dadosGrupo);
+      const response = await api.post("/grupos", dadosGrupo);
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao criar grupo' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao criar grupo",
       };
     }
   },
@@ -53,9 +53,9 @@ export const groupService = {
       const response = await api.post(`/grupos/${id}/entrar`);
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao entrar no grupo' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao entrar no grupo",
       };
     }
   },
@@ -66,9 +66,9 @@ export const groupService = {
       const response = await api.delete(`/grupos/${id}/sair`);
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao sair do grupo' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao sair do grupo",
       };
     }
   },
@@ -79,9 +79,23 @@ export const groupService = {
       const response = await api.delete(`/grupos/${id}`);
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao deletar grupo' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao deletar grupo",
+      };
+    }
+  },
+
+  // Obter grupos do usuário
+  async getUserGroups() {
+    try {
+      const response = await api.get("/usuarios/grupos");
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error.response?.data?.message || "Erro ao obter grupos do usuário",
       };
     }
   },
@@ -92,10 +106,10 @@ export const groupService = {
       const response = await api.get(`/grupos/${id}/participantes`);
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao obter participantes' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao obter participantes",
       };
     }
-  }
+  },
 };

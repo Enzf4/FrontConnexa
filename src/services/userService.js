@@ -1,47 +1,28 @@
-import api from './api';
+import api from "./api";
 
 export const userService = {
   // Obter perfil
   async getProfile() {
     try {
-      const response = await api.get('/usuarios/perfil');
+      const response = await api.get("/usuarios/perfil");
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao obter perfil' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao obter perfil",
       };
     }
   },
 
   // Atualizar perfil
-  async updateProfile(dados, fotoPerfil) {
+  async updateProfile(dados) {
     try {
-      const formData = new FormData();
-      
-      // Adicionar dados do formulário
-      Object.keys(dados).forEach(key => {
-        if (dados[key] !== undefined && dados[key] !== null) {
-          formData.append(key, dados[key]);
-        }
-      });
-      
-      // Adicionar foto se fornecida
-      if (fotoPerfil) {
-        formData.append('foto_perfil', fotoPerfil);
-      }
-      
-      const response = await api.put('/usuarios/perfil', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      
+      const response = await api.put("/usuarios/perfil", dados);
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao atualizar perfil' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao atualizar perfil",
       };
     }
   },
@@ -49,12 +30,25 @@ export const userService = {
   // Obter grupos do usuário
   async getUserGroups() {
     try {
-      const response = await api.get('/usuarios/grupos');
+      const response = await api.get("/usuarios/grupos");
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao obter grupos' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao obter grupos",
+      };
+    }
+  },
+
+  // Obter lista de avatares disponíveis
+  async getAvailableAvatars() {
+    try {
+      const response = await api.get("/usuarios/avatares");
+      return { success: true, data: response.data };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao obter avatares",
       };
     }
   },
@@ -62,15 +56,15 @@ export const userService = {
   // Deletar conta
   async deleteAccount(senha) {
     try {
-      const response = await api.delete('/usuarios/conta', { 
-        data: { senha } 
+      const response = await api.delete("/usuarios/conta", {
+        data: { senha },
       });
       return { success: true, data: response.data };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'Erro ao deletar conta' 
+      return {
+        success: false,
+        error: error.response?.data?.message || "Erro ao deletar conta",
       };
     }
-  }
+  },
 };

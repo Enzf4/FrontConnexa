@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Badge, Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { useGroups } from '../contexts/GroupsContext';
-import { useNotifications } from '../contexts/NotificationsContext';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Badge,
+  Spinner,
+} from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { useGroups } from "../contexts/GroupsContext";
+import { useNotifications } from "../contexts/NotificationsContext";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -14,39 +22,41 @@ const Dashboard = () => {
     if (user) {
       getMyGroups();
     }
-  }, [user]);
+  }, [user, getMyGroups]);
 
-  const recentGroups = myGroups?.slice(0, 3) || [];
+  // Ensure myGroups is always an array before using array methods
+  const safeMyGroups = Array.isArray(myGroups) ? myGroups : [];
+  const recentGroups = safeMyGroups.slice(0, 3);
   const recentNotifications = notifications?.slice(0, 5) || [];
 
   const getGroupStatus = (group) => {
     if (group.participantes_atual >= group.limite_participantes) {
-      return { text: 'Lotado', variant: 'danger' };
+      return { text: "Lotado", variant: "danger" };
     } else if (group.participantes_atual >= group.limite_participantes * 0.8) {
-      return { text: 'Quase lotado', variant: 'warning' };
+      return { text: "Quase lotado", variant: "warning" };
     } else {
-      return { text: 'Disponível', variant: 'success' };
+      return { text: "Disponível", variant: "success" };
     }
   };
 
   const getNotificationIcon = (tipo) => {
     switch (tipo) {
-      case 'nova_mensagem':
-        return 'fas fa-comment';
-      case 'novo_membro':
-        return 'fas fa-user-plus';
-      case 'alteracao_grupo':
-        return 'fas fa-edit';
+      case "nova_mensagem":
+        return "fas fa-comment";
+      case "novo_membro":
+        return "fas fa-user-plus";
+      case "alteracao_grupo":
+        return "fas fa-edit";
       default:
-        return 'fas fa-bell';
+        return "fas fa-bell";
     }
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
+    return new Date(dateString).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
   };
 
@@ -64,8 +74,10 @@ const Dashboard = () => {
     <Container fluid>
       <Row className="mb-4">
         <Col>
-          <h1 className="h3 mb-1">Olá, {user?.nome?.split(' ')[0]}! 👋</h1>
-          <p className="text-muted">Bem-vindo ao Connexa. Aqui está um resumo da sua atividade.</p>
+          <h1 className="h3 mb-1">Olá, {user?.nome?.split(" ")[0]}! 👋</h1>
+          <p className="text-muted">
+            Bem-vindo ao Connexa. Aqui está um resumo da sua atividade.
+          </p>
         </Col>
       </Row>
 
@@ -75,7 +87,7 @@ const Dashboard = () => {
           <Card className="text-center h-100">
             <Card.Body>
               <i className="fas fa-users fa-2x text-primary mb-2"></i>
-              <h4 className="mb-1">{myGroups?.length || 0}</h4>
+              <h4 className="mb-1">{safeMyGroups.length}</h4>
               <p className="text-muted mb-0">Meus Grupos</p>
             </Card.Body>
           </Card>
@@ -116,10 +128,21 @@ const Dashboard = () => {
             <Card.Header className="d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Meus Grupos</h5>
               <div>
-                <Button as={Link} to="/groups" variant="outline-primary" size="sm" className="me-2">
+                <Button
+                  as={Link}
+                  to="/groups"
+                  variant="outline-primary"
+                  size="sm"
+                  className="me-2"
+                >
                   Ver Todos
                 </Button>
-                <Button as={Link} to="/groups/create" variant="primary" size="sm">
+                <Button
+                  as={Link}
+                  to="/groups/create"
+                  variant="primary"
+                  size="sm"
+                >
                   <i className="fas fa-plus me-1"></i>
                   Criar Grupo
                 </Button>
@@ -129,23 +152,27 @@ const Dashboard = () => {
               {recentGroups.length === 0 ? (
                 <div className="text-center py-4">
                   <i className="fas fa-users fa-3x text-muted mb-3"></i>
-                  <h6 className="text-muted">Você ainda não participa de nenhum grupo</h6>
-                  <p className="text-muted">Que tal criar ou buscar um grupo de estudo?</p>
+                  <h6 className="text-muted">
+                    Você ainda não participa de nenhum grupo
+                  </h6>
+                  <p className="text-muted">
+                    Que tal criar ou buscar um grupo de estudo?
+                  </p>
                   <Button as={Link} to="/groups" variant="primary">
                     Buscar Grupos
                   </Button>
                 </div>
               ) : (
                 <div className="list-group list-group-flush">
-                  {recentGroups.map(group => {
+                  {recentGroups.map((group) => {
                     const status = getGroupStatus(group);
                     return (
                       <div key={group.id} className="list-group-item px-0">
                         <div className="d-flex justify-content-between align-items-start">
                           <div className="flex-grow-1">
                             <h6 className="mb-1">
-                              <Link 
-                                to={`/groups/${group.id}`} 
+                              <Link
+                                to={`/groups/${group.id}`}
                                 className="text-decoration-none"
                               >
                                 {group.nome}
@@ -154,9 +181,12 @@ const Dashboard = () => {
                             <p className="text-muted mb-1">{group.materia}</p>
                             <small className="text-muted">
                               <i className="fas fa-map-marker-alt me-1"></i>
-                              {group.local === 'online' ? 'Online' : 'Presencial'} • 
-                              <i className="fas fa-users me-1 ms-2"></i>
-                              {group.participantes_atual}/{group.limite_participantes} participantes
+                              {group.local === "online"
+                                ? "Online"
+                                : "Presencial"}{" "}
+                              •<i className="fas fa-users me-1 ms-2"></i>
+                              {group.participantes_atual}/
+                              {group.limite_participantes} participantes
                             </small>
                           </div>
                           <div className="text-end">
@@ -183,7 +213,12 @@ const Dashboard = () => {
           <Card className="h-100">
             <Card.Header className="d-flex justify-content-between align-items-center">
               <h5 className="mb-0">Notificações Recentes</h5>
-              <Button as={Link} to="/notifications" variant="outline-primary" size="sm">
+              <Button
+                as={Link}
+                to="/notifications"
+                variant="outline-primary"
+                size="sm"
+              >
                 Ver Todas
               </Button>
             </Card.Header>
@@ -195,16 +230,24 @@ const Dashboard = () => {
                 </div>
               ) : (
                 <div className="list-group list-group-flush">
-                  {recentNotifications.map(notification => (
-                    <div 
-                      key={notification.id} 
-                      className={`list-group-item px-0 ${!notification.lida ? 'notification-item unread' : ''}`}
+                  {recentNotifications.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className={`list-group-item px-0 ${
+                        !notification.lida ? "notification-item unread" : ""
+                      }`}
                     >
                       <div className="d-flex align-items-start">
-                        <i className={`${getNotificationIcon(notification.tipo)} me-2 mt-1`}></i>
+                        <i
+                          className={`${getNotificationIcon(
+                            notification.tipo
+                          )} me-2 mt-1`}
+                        ></i>
                         <div className="flex-grow-1">
                           <h6 className="mb-1 small">{notification.titulo}</h6>
-                          <p className="text-muted mb-1 small">{notification.conteudo}</p>
+                          <p className="text-muted mb-1 small">
+                            {notification.conteudo}
+                          </p>
                           <small className="text-muted">
                             {formatDate(notification.created_at)}
                           </small>
@@ -229,49 +272,52 @@ const Dashboard = () => {
             <Card.Body>
               <Row>
                 <Col md={3} className="mb-3">
-                  <Button 
-                    as={Link} 
-                    to="/groups" 
-                    variant="outline-primary" 
-                    className="w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3"
+                  <Button
+                    as={Link}
+                    to="/groups"
+                    variant="outline-primary"
+                    className="quick-action-btn w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3"
                   >
                     <i className="fas fa-search fa-2x mb-2"></i>
                     <span>Buscar Grupos</span>
                   </Button>
                 </Col>
                 <Col md={3} className="mb-3">
-                  <Button 
-                    as={Link} 
-                    to="/groups/create" 
-                    variant="outline-success" 
-                    className="w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3"
+                  <Button
+                    as={Link}
+                    to="/groups/create"
+                    variant="outline-success"
+                    className="quick-action-btn w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3"
                   >
                     <i className="fas fa-plus fa-2x mb-2"></i>
                     <span>Criar Grupo</span>
                   </Button>
                 </Col>
                 <Col md={3} className="mb-3">
-                  <Button 
-                    as={Link} 
-                    to="/profile" 
-                    variant="outline-info" 
-                    className="w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3"
+                  <Button
+                    as={Link}
+                    to="/profile"
+                    variant="outline-info"
+                    className="quick-action-btn w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3"
                   >
                     <i className="fas fa-user fa-2x mb-2"></i>
                     <span>Meu Perfil</span>
                   </Button>
                 </Col>
                 <Col md={3} className="mb-3">
-                  <Button 
-                    as={Link} 
-                    to="/notifications" 
-                    variant="outline-warning" 
-                    className="w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3"
+                  <Button
+                    as={Link}
+                    to="/notifications"
+                    variant="outline-warning"
+                    className="quick-action-btn w-100 h-100 d-flex flex-column align-items-center justify-content-center py-3"
                   >
                     <i className="fas fa-bell fa-2x mb-2"></i>
                     <span>Notificações</span>
                     {unreadCount > 0 && (
-                      <Badge bg="danger" className="position-absolute top-0 end-0">
+                      <Badge
+                        bg="danger"
+                        className="position-absolute top-0 end-0"
+                      >
                         {unreadCount}
                       </Badge>
                     )}

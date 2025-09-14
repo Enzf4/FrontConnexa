@@ -1,114 +1,111 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button, Alert, Spinner } from 'react-bootstrap';
-import { useAuth } from '../contexts/AuthContext';
-import api from '../services/api';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Alert,
+  Spinner,
+} from "react-bootstrap";
+import { useAuth } from "../contexts/AuthContext";
+import api from "../services/api";
+import AvatarSelector from "../components/AvatarSelector";
+import Avatar from "../components/Avatar";
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
   const [formData, setFormData] = useState({
-    nome: '',
-    curso: '',
-    periodo: '',
-    interesses: ''
+    nome: "",
+    curso: "",
+    periodo: "",
+    interesses: "",
+    avatar: "avatar-1",
   });
-  const [profileImage, setProfileImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
+  const [success, setSuccess] = useState("");
 
   const cursos = [
-    'Ciência da Computação',
-    'Engenharia de Software',
-    'Sistemas de Informação',
-    'Engenharia Civil',
-    'Engenharia Mecânica',
-    'Engenharia Elétrica',
-    'Administração',
-    'Direito',
-    'Medicina',
-    'Psicologia',
-    'Outro'
+    "Ciência da Computação",
+    "Engenharia de Software",
+    "Sistemas de Informação",
+    "Engenharia Civil",
+    "Engenharia Mecânica",
+    "Engenharia Elétrica",
+    "Administração",
+    "Direito",
+    "Medicina",
+    "Psicologia",
+    "Outro",
   ];
 
-  const periodos = ['1º', '2º', '3º', '4º', '5º', '6º', '7º', '8º', '9º', '10º'];
+  const periodos = [
+    "1º",
+    "2º",
+    "3º",
+    "4º",
+    "5º",
+    "6º",
+    "7º",
+    "8º",
+    "9º",
+    "10º",
+  ];
 
   useEffect(() => {
     if (user) {
       setFormData({
-        nome: user.nome || '',
-        curso: user.curso || '',
-        periodo: user.periodo || '',
-        interesses: user.interesses || ''
+        nome: user.nome || "",
+        curso: user.curso || "",
+        periodo: user.periodo || "",
+        interesses: user.interesses || "",
+        avatar: user.avatar || "avatar-1",
       });
-      setPreviewImage(user.foto_perfil);
     }
   }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Limpar erro do campo quando usuário começar a digitar
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validar tipo de arquivo
-      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-      if (!validTypes.includes(file.type)) {
-        setErrors(prev => ({
-          ...prev,
-          foto_perfil: 'Tipo de arquivo inválido. Use JPG, PNG, GIF ou WEBP.'
-        }));
-        return;
-      }
-
-      // Validar tamanho (5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setErrors(prev => ({
-          ...prev,
-          foto_perfil: 'Arquivo muito grande. Máximo 5MB.'
-        }));
-        return;
-      }
-
-      setProfileImage(file);
-      setPreviewImage(URL.createObjectURL(file));
-      setErrors(prev => ({
-        ...prev,
-        foto_perfil: ''
-      }));
-    }
+  const handleAvatarSelect = (avatarId) => {
+    setFormData((prev) => ({
+      ...prev,
+      avatar: avatarId,
+    }));
   };
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.nome.trim()) {
-      newErrors.nome = 'Nome é obrigatório';
+    if (!formData.nome || !formData.nome.trim()) {
+      newErrors.nome = "Nome é obrigatório";
     } else if (formData.nome.trim().length < 2) {
-      newErrors.nome = 'Nome deve ter pelo menos 2 caracteres';
+      newErrors.nome = "Nome deve ter pelo menos 2 caracteres";
     } else if (formData.nome.trim().length > 100) {
-      newErrors.nome = 'Nome deve ter no máximo 100 caracteres';
+      newErrors.nome = "Nome deve ter no máximo 100 caracteres";
     }
 
-    if (!formData.curso) {
-      newErrors.curso = 'Curso é obrigatório';
+    if (!formData.curso || formData.curso === "") {
+      newErrors.curso = "Curso é obrigatório";
     }
 
-    if (!formData.periodo) {
-      newErrors.periodo = 'Período é obrigatório';
+    if (!formData.periodo || formData.periodo === "") {
+      newErrors.periodo = "Período é obrigatório";
     }
 
     setErrors(newErrors);
@@ -117,37 +114,38 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setLoading(true);
-    setSuccess('');
+    setSuccess("");
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('nome', formData.nome.trim());
-      formDataToSend.append('curso', formData.curso);
-      formDataToSend.append('periodo', formData.periodo);
-      formDataToSend.append('interesses', formData.interesses.trim());
-      
-      if (profileImage) {
-        formDataToSend.append('foto_perfil', profileImage);
-      }
+      // Preparar dados para envio - backend atualizado com suporte a avatares
+      const dataToSend = {
+        nome: formData.nome.trim(),
+        curso: formData.curso,
+        periodo: formData.periodo,
+        interesses: formData.interesses ? formData.interesses.trim() : "",
+        avatar: formData.avatar, // ✅ Backend agora suporta avatares!
+      };
 
-      const response = await api.put('/usuarios/perfil', formDataToSend, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      // Remover campos vazios que podem causar erro 400
+      Object.keys(dataToSend).forEach((key) => {
+        if (dataToSend[key] === null || dataToSend[key] === undefined) {
+          delete dataToSend[key];
         }
       });
 
+      const response = await api.put("/usuarios/perfil", dataToSend);
+
       updateUser(response.data.usuario);
-      setSuccess('Perfil atualizado com sucesso!');
-      setProfileImage(null);
-      
+      setSuccess("Perfil atualizado com sucesso!");
     } catch (error) {
-      const message = error.response?.data?.message || 'Erro ao atualizar perfil';
+      const message =
+        error.response?.data?.message || "Erro ao atualizar perfil";
       setErrors({ submit: message });
     } finally {
       setLoading(false);
@@ -155,19 +153,25 @@ const Profile = () => {
   };
 
   const handleDeleteAccount = async () => {
-    const senha = prompt('Digite sua senha para confirmar a exclusão da conta:');
+    const senha = prompt(
+      "Digite sua senha para confirmar a exclusão da conta:"
+    );
     if (!senha) return;
 
-    if (!confirm('Tem certeza que deseja deletar sua conta? Esta ação não pode ser desfeita.')) {
+    if (
+      !confirm(
+        "Tem certeza que deseja deletar sua conta? Esta ação não pode ser desfeita."
+      )
+    ) {
       return;
     }
 
     try {
-      await api.delete('/usuarios/conta', { data: { senha } });
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      await api.delete("/usuarios/conta", { data: { senha } });
+      localStorage.removeItem("token");
+      window.location.href = "/login";
     } catch (error) {
-      const message = error.response?.data?.message || 'Erro ao deletar conta';
+      const message = error.response?.data?.message || "Erro ao deletar conta";
       alert(message);
     }
   };
@@ -182,57 +186,59 @@ const Profile = () => {
                 <i className="fas fa-user me-2"></i>
                 Meu Perfil
               </h2>
-              <p className="text-muted mb-0">Gerencie suas informações pessoais</p>
+              <p className="text-muted mb-0">
+                Gerencie suas informações pessoais
+              </p>
             </Card.Header>
             <Card.Body className="p-4">
               {success && (
-                <Alert variant="success" dismissible onClose={() => setSuccess('')}>
+                <Alert
+                  variant="success"
+                  dismissible
+                  onClose={() => setSuccess("")}
+                >
                   <i className="fas fa-check-circle me-2"></i>
                   {success}
                 </Alert>
               )}
 
               {errors.submit && (
-                <Alert variant="danger" dismissible onClose={() => setErrors({})}>
+                <Alert
+                  variant="danger"
+                  dismissible
+                  onClose={() => setErrors({})}
+                >
                   <i className="fas fa-exclamation-triangle me-2"></i>
                   {errors.submit}
                 </Alert>
               )}
 
               <Form onSubmit={handleSubmit}>
-                {/* Foto de Perfil */}
+                {/* Avatar Selection */}
                 <div className="text-center mb-4">
-                  <div className="position-relative d-inline-block">
-                    <img 
-                      src={previewImage || '/default-avatar.png'} 
-                      alt="Foto de perfil" 
-                      className="rounded-circle"
-                      style={{ width: '120px', height: '120px', objectFit: 'cover' }}
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/120x120/6c757d/ffffff?text=' + (user?.nome?.charAt(0) || 'U').toUpperCase();
-                      }}
-                    />
-                    <label 
-                      htmlFor="foto_perfil" 
-                      className="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle"
-                      style={{ width: '32px', height: '32px' }}
-                    >
-                      <i className="fas fa-camera"></i>
-                    </label>
-                    <input
-                      type="file"
-                      id="foto_perfil"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="d-none"
+                  <h6 className="mb-3">Seu Avatar</h6>
+                  <Avatar
+                    avatarId={formData.avatar}
+                    size="xlarge"
+                    className="mb-3 mx-auto"
+                  />
+                  <p className="text-muted small mb-3">
+                    Escolha um avatar que represente você
+                    <br />
+                    <small className="text-success">
+                      <i className="fas fa-check-circle me-1"></i>
+                      Sistema de avatares funcionando perfeitamente!
+                    </small>
+                  </p>
+
+                  <div className="mb-3">
+                    <h6 className="mb-3">Escolher Avatar</h6>
+                    <AvatarSelector
+                      selectedAvatar={formData.avatar}
+                      onAvatarSelect={handleAvatarSelect}
+                      size="large"
                     />
                   </div>
-                  {errors.foto_perfil && (
-                    <div className="error-message">{errors.foto_perfil}</div>
-                  )}
-                  <p className="text-muted small mt-2">
-                    Clique no ícone da câmera para alterar sua foto
-                  </p>
                 </div>
 
                 <Row>
@@ -257,7 +263,7 @@ const Profile = () => {
                       <Form.Label>Email</Form.Label>
                       <Form.Control
                         type="email"
-                        value={user?.email || ''}
+                        value={user?.email || ""}
                         disabled
                         className="bg-light"
                       />
@@ -279,8 +285,10 @@ const Profile = () => {
                         isInvalid={!!errors.curso}
                       >
                         <option value="">Selecione seu curso</option>
-                        {cursos.map(curso => (
-                          <option key={curso} value={curso}>{curso}</option>
+                        {cursos.map((curso) => (
+                          <option key={curso} value={curso}>
+                            {curso}
+                          </option>
                         ))}
                       </Form.Select>
                       <Form.Control.Feedback type="invalid">
@@ -298,8 +306,10 @@ const Profile = () => {
                         isInvalid={!!errors.periodo}
                       >
                         <option value="">Selecione seu período</option>
-                        {periodos.map(periodo => (
-                          <option key={periodo} value={periodo}>{periodo} período</option>
+                        {periodos.map((periodo) => (
+                          <option key={periodo} value={periodo}>
+                            {periodo} período
+                          </option>
                         ))}
                       </Form.Select>
                       <Form.Control.Feedback type="invalid">
@@ -320,20 +330,25 @@ const Profile = () => {
                     placeholder="Ex: Programação, Matemática, Física, Literatura..."
                   />
                   <Form.Text className="text-muted">
-                    Descreva suas áreas de interesse para encontrar grupos relacionados
+                    Descreva suas áreas de interesse para encontrar grupos
+                    relacionados
                   </Form.Text>
                 </Form.Group>
 
                 <div className="d-grid gap-2">
-                  <Button 
-                    type="submit" 
-                    variant="primary" 
+                  <Button
+                    type="submit"
+                    variant="primary"
                     size="lg"
                     disabled={loading}
                   >
                     {loading ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
                         Salvando...
                       </>
                     ) : (
@@ -354,8 +369,8 @@ const Profile = () => {
                   <i className="fas fa-exclamation-triangle me-2"></i>
                   Área de Perigo
                 </h6>
-                <Button 
-                  variant="outline-danger" 
+                <Button
+                  variant="outline-danger"
                   onClick={handleDeleteAccount}
                   size="sm"
                 >

@@ -1,15 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Badge, Spinner, Alert, Modal } from 'react-bootstrap';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { useGroups } from '../contexts/GroupsContext';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Badge,
+  Spinner,
+  Alert,
+  Modal,
+} from "react-bootstrap";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { useGroups } from "../contexts/GroupsContext";
+import Avatar from "../components/Avatar";
 
 const GroupDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { currentGroup, getGroupDetails, joinGroup, leaveGroup, deleteGroup, loading } = useGroups();
-  
+  const {
+    currentGroup,
+    getGroupDetails,
+    joinGroup,
+    leaveGroup,
+    deleteGroup,
+    loading,
+  } = useGroups();
+
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
@@ -22,17 +40,22 @@ const GroupDetails = () => {
 
   const isUserInGroup = () => {
     if (!currentGroup || !user) return false;
-    return currentGroup.participantes?.some(p => p.id === user.id);
+    return currentGroup.participantes?.some((p) => p.id === user.id);
   };
 
   const isUserAdmin = () => {
     if (!currentGroup || !user) return false;
-    return currentGroup.participantes?.some(p => p.id === user.id && p.papel === 'admin');
+    return currentGroup.participantes?.some(
+      (p) => p.id === user.id && p.papel === "admin"
+    );
   };
 
   const isGroupFull = () => {
     if (!currentGroup) return false;
-    return currentGroup.grupo.participantes_atual >= currentGroup.grupo.limite_participantes;
+    return (
+      currentGroup.grupo.participantes_atual >=
+      currentGroup.grupo.limite_participantes
+    );
   };
 
   const handleJoinGroup = async () => {
@@ -49,7 +72,7 @@ const GroupDetails = () => {
     setActionLoading(true);
     const result = await leaveGroup(id);
     if (result.success) {
-      navigate('/groups');
+      navigate("/groups");
     }
     setActionLoading(false);
     setShowLeaveModal(false);
@@ -59,19 +82,19 @@ const GroupDetails = () => {
     setActionLoading(true);
     const result = await deleteGroup(id);
     if (result.success) {
-      navigate('/groups');
+      navigate("/groups");
     }
     setActionLoading(false);
     setShowDeleteModal(false);
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -92,7 +115,7 @@ const GroupDetails = () => {
           <i className="fas fa-exclamation-triangle me-2"></i>
           Grupo não encontrado ou você não tem permissão para visualizá-lo.
         </Alert>
-        <Button variant="primary" onClick={() => navigate('/groups')}>
+        <Button variant="primary" onClick={() => navigate("/groups")}>
           Voltar para Grupos
         </Button>
       </Container>
@@ -113,26 +136,26 @@ const GroupDetails = () => {
               <h1 className="h3 mb-1">{grupo.nome}</h1>
               <p className="text-muted mb-0">
                 <i className="fas fa-book me-1"></i>
-                {grupo.materia} • 
-                <i className={`fas fa-${grupo.local === 'online' ? 'video' : 'map-marker-alt'} me-1 ms-2`}></i>
-                {grupo.local === 'online' ? 'Online' : 'Presencial'}
+                {grupo.materia} •
+                <i
+                  className={`fas fa-${
+                    grupo.local === "online" ? "video" : "map-marker-alt"
+                  } me-1 ms-2`}
+                ></i>
+                {grupo.local === "online" ? "Online" : "Presencial"}
               </p>
             </div>
             <div>
-              <Button 
-                variant="outline-secondary" 
-                onClick={() => navigate('/groups')}
+              <Button
+                variant="outline-secondary"
+                onClick={() => navigate("/groups")}
                 className="me-2"
               >
                 <i className="fas fa-arrow-left me-1"></i>
                 Voltar
               </Button>
               {userInGroup && (
-                <Button 
-                  as={Link} 
-                  to={`/groups/${id}/chat`} 
-                  variant="primary"
-                >
+                <Button as={Link} to={`/groups/${id}/chat`} variant="primary">
                   <i className="fas fa-comments me-1"></i>
                   Chat do Grupo
                 </Button>
@@ -151,36 +174,67 @@ const GroupDetails = () => {
             </Card.Header>
             <Card.Body>
               <p className="card-text">{grupo.objetivo}</p>
-              
+
               <div className="row">
                 <div className="col-md-6">
                   <h6>Informações</h6>
                   <ul className="list-unstyled">
-                    <li><strong>Matéria:</strong> {grupo.materia}</li>
-                    <li><strong>Local:</strong> {grupo.local === 'online' ? 'Online' : 'Presencial'}</li>
-                    <li><strong>Participantes:</strong> {grupo.participantes_atual}/{grupo.limite_participantes}</li>
-                    <li><strong>Criado em:</strong> {formatDate(grupo.created_at)}</li>
-                    <li><strong>Criado por:</strong> {grupo.criador_nome}</li>
+                    <li>
+                      <strong>Matéria:</strong> {grupo.materia}
+                    </li>
+                    <li>
+                      <strong>Local:</strong>{" "}
+                      {grupo.local === "online" ? "Online" : "Presencial"}
+                    </li>
+                    <li>
+                      <strong>Participantes:</strong>{" "}
+                      {grupo.participantes_atual}/{grupo.limite_participantes}
+                    </li>
+                    <li>
+                      <strong>Criado em:</strong> {formatDate(grupo.created_at)}
+                    </li>
+                    <li>
+                      <strong>Criado por:</strong> {grupo.criador_nome}
+                    </li>
                   </ul>
                 </div>
                 <div className="col-md-6">
                   <h6>Status</h6>
                   <div className="mb-2">
-                    <Badge bg={groupFull ? 'danger' : grupo.participantes_atual >= grupo.limite_participantes * 0.8 ? 'warning' : 'success'}>
-                      {groupFull ? 'Lotado' : grupo.participantes_atual >= grupo.limite_participantes * 0.8 ? 'Quase lotado' : 'Disponível'}
+                    <Badge
+                      bg={
+                        groupFull
+                          ? "danger"
+                          : grupo.participantes_atual >=
+                            grupo.limite_participantes * 0.8
+                          ? "warning"
+                          : "success"
+                      }
+                    >
+                      {groupFull
+                        ? "Lotado"
+                        : grupo.participantes_atual >=
+                          grupo.limite_participantes * 0.8
+                        ? "Quase lotado"
+                        : "Disponível"}
                     </Badge>
                   </div>
-                  <div className="progress mb-2" style={{ height: '8px' }}>
-                    <div 
-                      className="progress-bar" 
-                      role="progressbar" 
-                      style={{ 
-                        width: `${(grupo.participantes_atual / grupo.limite_participantes) * 100}%` 
+                  <div className="progress mb-2" style={{ height: "8px" }}>
+                    <div
+                      className="progress-bar"
+                      role="progressbar"
+                      style={{
+                        width: `${
+                          (grupo.participantes_atual /
+                            grupo.limite_participantes) *
+                          100
+                        }%`,
                       }}
                     ></div>
                   </div>
                   <small className="text-muted">
-                    {grupo.participantes_atual} de {grupo.limite_participantes} vagas preenchidas
+                    {grupo.participantes_atual} de {grupo.limite_participantes}{" "}
+                    vagas preenchidas
                   </small>
                 </div>
               </div>
@@ -195,8 +249,8 @@ const GroupDetails = () => {
             <Card.Body>
               <div className="d-flex gap-2 flex-wrap">
                 {!userInGroup ? (
-                  <Button 
-                    variant="success" 
+                  <Button
+                    variant="success"
                     onClick={handleJoinGroup}
                     disabled={actionLoading || groupFull}
                   >
@@ -205,21 +259,21 @@ const GroupDetails = () => {
                     ) : (
                       <i className="fas fa-user-plus me-2"></i>
                     )}
-                    {groupFull ? 'Grupo Lotado' : 'Entrar no Grupo'}
+                    {groupFull ? "Grupo Lotado" : "Entrar no Grupo"}
                   </Button>
                 ) : (
                   <>
-                    <Button 
-                      as={Link} 
-                      to={`/groups/${id}/chat`} 
+                    <Button
+                      as={Link}
+                      to={`/groups/${id}/chat`}
                       variant="primary"
                     >
                       <i className="fas fa-comments me-2"></i>
                       Ir para Chat
                     </Button>
                     {!userAdmin && (
-                      <Button 
-                        variant="outline-danger" 
+                      <Button
+                        variant="outline-danger"
                         onClick={() => setShowLeaveModal(true)}
                         disabled={actionLoading}
                       >
@@ -232,8 +286,8 @@ const GroupDetails = () => {
                       </Button>
                     )}
                     {userAdmin && (
-                      <Button 
-                        variant="danger" 
+                      <Button
+                        variant="danger"
                         onClick={() => setShowDeleteModal(true)}
                         disabled={actionLoading}
                       >
@@ -263,21 +317,23 @@ const GroupDetails = () => {
             <Card.Body>
               {participantes && participantes.length > 0 ? (
                 <div className="list-group list-group-flush">
-                  {participantes.map(participant => (
-                    <div key={participant.id} className="list-group-item px-0 d-flex align-items-center">
-                      <img 
-                        src={participant.foto_perfil || '/default-avatar.png'} 
-                        alt="Avatar" 
-                        className="profile-pic me-3"
-                        onError={(e) => {
-                          e.target.src = 'https://via.placeholder.com/40x40/6c757d/ffffff?text=' + participant.nome.charAt(0).toUpperCase();
-                        }}
+                  {participantes.map((participant) => (
+                    <div
+                      key={participant.id}
+                      className="list-group-item px-0 d-flex align-items-center"
+                    >
+                      <Avatar
+                        avatarId={participant.avatar || "avatar-1"}
+                        size="medium"
+                        className="me-3"
                       />
                       <div className="flex-grow-1">
                         <h6 className="mb-1">
                           {participant.nome}
-                          {participant.papel === 'admin' && (
-                            <Badge bg="primary" className="ms-2">Admin</Badge>
+                          {participant.papel === "admin" && (
+                            <Badge bg="primary" className="ms-2">
+                              Admin
+                            </Badge>
                           )}
                         </h6>
                         <small className="text-muted">
@@ -292,7 +348,9 @@ const GroupDetails = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-muted text-center">Nenhum participante encontrado</p>
+                <p className="text-muted text-center">
+                  Nenhum participante encontrado
+                </p>
               )}
             </Card.Body>
           </Card>
@@ -307,16 +365,20 @@ const GroupDetails = () => {
         <Modal.Body>
           Tem certeza que deseja sair do grupo <strong>{grupo.nome}</strong>?
           <br />
-          <small className="text-muted">Você poderá entrar novamente se houver vagas disponíveis.</small>
+          <small className="text-muted">
+            Você poderá entrar novamente se houver vagas disponíveis.
+          </small>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowLeaveModal(false)}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={handleLeaveGroup} disabled={actionLoading}>
-            {actionLoading ? (
-              <Spinner size="sm" className="me-2" />
-            ) : null}
+          <Button
+            variant="danger"
+            onClick={handleLeaveGroup}
+            disabled={actionLoading}
+          >
+            {actionLoading ? <Spinner size="sm" className="me-2" /> : null}
             Sair do Grupo
           </Button>
         </Modal.Footer>
@@ -334,16 +396,21 @@ const GroupDetails = () => {
           </Alert>
           Tem certeza que deseja deletar o grupo <strong>{grupo.nome}</strong>?
           <br />
-          <small className="text-muted">Todos os participantes serão removidos e o grupo será excluído permanentemente.</small>
+          <small className="text-muted">
+            Todos os participantes serão removidos e o grupo será excluído
+            permanentemente.
+          </small>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
             Cancelar
           </Button>
-          <Button variant="danger" onClick={handleDeleteGroup} disabled={actionLoading}>
-            {actionLoading ? (
-              <Spinner size="sm" className="me-2" />
-            ) : null}
+          <Button
+            variant="danger"
+            onClick={handleDeleteGroup}
+            disabled={actionLoading}
+          >
+            {actionLoading ? <Spinner size="sm" className="me-2" /> : null}
             Deletar Grupo
           </Button>
         </Modal.Footer>

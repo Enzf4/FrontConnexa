@@ -1,14 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button, Badge, Spinner, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { useGroups } from '../contexts/GroupsContext';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Badge,
+  Spinner,
+  Alert,
+} from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { useGroups } from "../contexts/GroupsContext";
 
 const Groups = () => {
   const { groups, loading, searchGroups } = useGroups();
   const [filters, setFilters] = useState({
-    materia: '',
-    local: '',
-    texto: ''
+    materia: "",
+    local: "",
+    texto: "",
   });
   const [searching, setSearching] = useState(false);
 
@@ -18,15 +28,15 @@ const Groups = () => {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSearch = async (e) => {
     if (e) e.preventDefault();
-    
+
     setSearching(true);
     await searchGroups(filters);
     setSearching(false);
@@ -34,39 +44,48 @@ const Groups = () => {
 
   const clearFilters = () => {
     setFilters({
-      materia: '',
-      local: '',
-      texto: ''
+      materia: "",
+      local: "",
+      texto: "",
     });
     handleSearch();
   };
 
   const getGroupStatus = (group) => {
     if (group.participantes_atual >= group.limite_participantes) {
-      return { text: 'Lotado', variant: 'danger' };
+      return { text: "Lotado", variant: "danger" };
     } else if (group.participantes_atual >= group.limite_participantes * 0.8) {
-      return { text: 'Quase lotado', variant: 'warning' };
+      return { text: "Quase lotado", variant: "warning" };
     } else {
-      return { text: 'Disponível', variant: 'success' };
+      return { text: "Disponível", variant: "success" };
     }
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
+    return new Date(dateString).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
   };
 
   const materias = [
-    'Cálculo I', 'Cálculo II', 'Cálculo III',
-    'Física I', 'Física II', 'Física III',
-    'Química', 'Biologia', 'Matemática',
-    'Programação', 'Estrutura de Dados',
-    'Banco de Dados', 'Redes de Computadores',
-    'Engenharia de Software', 'Sistemas Operacionais',
-    'Outro'
+    "Cálculo I",
+    "Cálculo II",
+    "Cálculo III",
+    "Física I",
+    "Física II",
+    "Física III",
+    "Química",
+    "Biologia",
+    "Matemática",
+    "Programação",
+    "Estrutura de Dados",
+    "Banco de Dados",
+    "Redes de Computadores",
+    "Engenharia de Software",
+    "Sistemas Operacionais",
+    "Outro",
   ];
 
   return (
@@ -76,7 +95,9 @@ const Groups = () => {
           <div className="d-flex justify-content-between align-items-center">
             <div>
               <h1 className="h3 mb-1">Grupos de Estudo</h1>
-              <p className="text-muted">Encontre grupos de estudo ou crie o seu próprio</p>
+              <p className="text-muted">
+                Encontre grupos de estudo ou crie o seu próprio
+              </p>
             </div>
             <Button as={Link} to="/groups/create" variant="primary">
               <i className="fas fa-plus me-2"></i>
@@ -99,8 +120,10 @@ const Groups = () => {
                   onChange={handleFilterChange}
                 >
                   <option value="">Todas as matérias</option>
-                  {materias.map(materia => (
-                    <option key={materia} value={materia}>{materia}</option>
+                  {materias.map((materia) => (
+                    <option key={materia} value={materia}>
+                      {materia}
+                    </option>
                   ))}
                 </Form.Select>
               </Col>
@@ -129,19 +152,15 @@ const Groups = () => {
             </Row>
             <Row>
               <Col className="text-end">
-                <Button 
-                  type="button" 
-                  variant="outline-secondary" 
+                <Button
+                  type="button"
+                  variant="outline-secondary"
                   onClick={clearFilters}
                   className="me-2"
                 >
                   Limpar Filtros
                 </Button>
-                <Button 
-                  type="submit" 
-                  variant="primary"
-                  disabled={searching}
-                >
+                <Button type="submit" variant="primary" disabled={searching}>
                   {searching ? (
                     <>
                       <Spinner size="sm" className="me-2" />
@@ -183,7 +202,7 @@ const Groups = () => {
         </Card>
       ) : (
         <Row>
-          {groups.map(group => {
+          {groups.map((group) => {
             const status = getGroupStatus(group);
             return (
               <Col lg={6} xl={4} className="mb-4" key={group.id}>
@@ -191,8 +210,8 @@ const Groups = () => {
                   <Card.Body>
                     <div className="d-flex justify-content-between align-items-start mb-3">
                       <h5 className="card-title mb-0">
-                        <Link 
-                          to={`/groups/${group.id}`} 
+                        <Link
+                          to={`/groups/${group.id}`}
                           className="text-decoration-none"
                         >
                           {group.nome}
@@ -200,28 +219,34 @@ const Groups = () => {
                       </h5>
                       <Badge bg={status.variant}>{status.text}</Badge>
                     </div>
-                    
+
                     <p className="text-muted mb-2">
                       <i className="fas fa-book me-1"></i>
                       {group.materia}
                     </p>
-                    
+
                     <p className="card-text mb-3">
-                      {group.objetivo.length > 100 
-                        ? `${group.objetivo.substring(0, 100)}...` 
-                        : group.objetivo
-                      }
+                      {group.objetivo.length > 100
+                        ? `${group.objetivo.substring(0, 100)}...`
+                        : group.objetivo}
                     </p>
-                    
+
                     <div className="mb-3">
                       <small className="text-muted">
-                        <i className={`fas fa-${group.local === 'online' ? 'video' : 'map-marker-alt'} me-1`}></i>
-                        {group.local === 'online' ? 'Online' : 'Presencial'}
+                        <i
+                          className={`fas fa-${
+                            group.local === "online"
+                              ? "video"
+                              : "map-marker-alt"
+                          } me-1`}
+                        ></i>
+                        {group.local === "online" ? "Online" : "Presencial"}
                       </small>
                       <br />
                       <small className="text-muted">
                         <i className="fas fa-users me-1"></i>
-                        {group.participantes_atual}/{group.limite_participantes} participantes
+                        {group.participantes_atual}/{group.limite_participantes}{" "}
+                        participantes
                       </small>
                       <br />
                       <small className="text-muted">
@@ -229,15 +254,15 @@ const Groups = () => {
                         Criado por {group.criador_nome}
                       </small>
                     </div>
-                    
+
                     <div className="d-flex justify-content-between align-items-center">
                       <small className="text-muted">
                         {formatDate(group.created_at)}
                       </small>
-                      <Button 
-                        as={Link} 
-                        to={`/groups/${group.id}`} 
-                        variant="outline-primary" 
+                      <Button
+                        as={Link}
+                        to={`/groups/${group.id}`}
+                        variant="outline-primary"
                         size="sm"
                       >
                         Ver Detalhes

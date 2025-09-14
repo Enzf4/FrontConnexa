@@ -1,33 +1,41 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Alert,
+} from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    senha: ''
+    email: "",
+    senha: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
-  const [resetEmail, setResetEmail] = useState('');
+  const [resetEmail, setResetEmail] = useState("");
 
   const { login, resetPassword } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Limpar erro do campo quando usuário começar a digitar
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
@@ -36,17 +44,21 @@ const Login = () => {
     const newErrors = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email é obrigatório';
+      newErrors.email = "Email é obrigatório";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email inválido';
-    } else if (!formData.email.includes('@univali.br') && !formData.email.includes('@edu.univali.br')) {
-      newErrors.email = 'Email deve ser institucional (@univali.br ou @edu.univali.br)';
+      newErrors.email = "Email inválido";
+    } else if (
+      !formData.email.includes("@univali.br") &&
+      !formData.email.includes("@edu.univali.br")
+    ) {
+      newErrors.email =
+        "Email deve ser institucional (@univali.br ou @edu.univali.br)";
     }
 
     if (!formData.senha) {
-      newErrors.senha = 'Senha é obrigatória';
+      newErrors.senha = "Senha é obrigatória";
     } else if (formData.senha.length < 8) {
-      newErrors.senha = 'Senha deve ter pelo menos 8 caracteres';
+      newErrors.senha = "Senha deve ter pelo menos 8 caracteres";
     }
 
     setErrors(newErrors);
@@ -55,33 +67,33 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setLoading(true);
     const result = await login(formData.email, formData.senha);
-    
+
     if (result.success) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
-    
+
     setLoading(false);
   };
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    
+
     if (!resetEmail) {
-      alert('Por favor, digite seu email');
+      alert("Por favor, digite seu email");
       return;
     }
 
     const result = await resetPassword(resetEmail);
     if (result.success) {
       setShowResetModal(false);
-      setResetEmail('');
+      setResetEmail("");
     }
   };
 
@@ -93,7 +105,7 @@ const Login = () => {
             <Card.Body className="p-4">
               <div className="text-center mb-4">
                 <i className="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
-                <h2 className="h4">Connexa</h2>
+                <h2 className="h4 text-white">Connexa</h2>
                 <p className="text-muted">Faça login na sua conta</p>
               </div>
 
@@ -129,26 +141,30 @@ const Login = () => {
                 </Form.Group>
 
                 <div className="d-grid mb-3">
-                  <Button 
-                    type="submit" 
-                    variant="primary" 
+                  <Button
+                    type="submit"
+                    variant="primary"
                     size="lg"
                     disabled={loading}
                   >
                     {loading ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
                         Entrando...
                       </>
                     ) : (
-                      'Entrar'
+                      "Entrar"
                     )}
                   </Button>
                 </div>
 
                 <div className="text-center">
-                  <Button 
-                    variant="link" 
+                  <Button
+                    variant="link"
                     className="p-0"
                     onClick={() => setShowResetModal(true)}
                   >
@@ -161,7 +177,7 @@ const Login = () => {
 
               <div className="text-center">
                 <p className="mb-0">
-                  Não tem uma conta?{' '}
+                  Não tem uma conta?{" "}
                   <Link to="/register" className="text-decoration-none">
                     Cadastre-se aqui
                   </Link>
@@ -174,14 +190,17 @@ const Login = () => {
 
       {/* Modal de Reset de Senha */}
       {showResetModal && (
-        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Recuperar Senha</h5>
-                <button 
-                  type="button" 
-                  className="btn-close" 
+                <button
+                  type="button"
+                  className="btn-close"
                   onClick={() => setShowResetModal(false)}
                 ></button>
               </div>
@@ -200,16 +219,13 @@ const Login = () => {
                 </Form>
               </div>
               <div className="modal-footer">
-                <Button 
-                  variant="secondary" 
+                <Button
+                  variant="secondary"
                   onClick={() => setShowResetModal(false)}
                 >
                   Cancelar
                 </Button>
-                <Button 
-                  variant="primary" 
-                  onClick={handleResetPassword}
-                >
+                <Button variant="primary" onClick={handleResetPassword}>
                   Enviar Email
                 </Button>
               </div>
