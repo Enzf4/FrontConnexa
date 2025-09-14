@@ -48,11 +48,11 @@ const Login = () => {
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Email inválido";
     } else if (
-      !formData.email.includes("@univali.br") &&
-      !formData.email.includes("@edu.univali.br")
+      !formData.email.includes("@alunos.unisanta.br") &&
+      !formData.email.includes("@edu.alunos.unisanta.br")
     ) {
       newErrors.email =
-        "Email deve ser institucional (@univali.br ou @edu.univali.br)";
+        "Email deve ser institucional (@alunos.unisanta.br ou @edu.alunos.unisanta.br)";
     }
 
     if (!formData.senha) {
@@ -117,7 +117,7 @@ const Login = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="seu.email@univali.br"
+                    placeholder="seu.email@alunos.unisanta.br"
                     isInvalid={!!errors.email}
                   />
                   <Form.Control.Feedback type="invalid">
@@ -212,7 +212,7 @@ const Login = () => {
                       type="email"
                       value={resetEmail}
                       onChange={(e) => setResetEmail(e.target.value)}
-                      placeholder="seu.email@univali.br"
+                      placeholder="seu.email@alunos.unisanta.br"
                       required
                     />
                   </Form.Group>

@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState } from "react";
+import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    curso: '',
-    periodo: '',
-    senha: '',
-    confirmarSenha: '',
-    interesses: ''
+    nome: "",
+    email: "",
+    curso: "",
+    periodo: "",
+    senha: "",
+    confirmarSenha: "",
+    interesses: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -20,33 +20,44 @@ const Register = () => {
   const navigate = useNavigate();
 
   const cursos = [
-    'Ciência da Computação',
-    'Engenharia de Software',
-    'Sistemas de Informação',
-    'Engenharia Civil',
-    'Engenharia Mecânica',
-    'Engenharia Elétrica',
-    'Administração',
-    'Direito',
-    'Medicina',
-    'Psicologia',
-    'Outro'
+    "Ciência da Computação",
+    "Engenharia de Software",
+    "Sistemas de Informação",
+    "Engenharia Civil",
+    "Engenharia Mecânica",
+    "Engenharia Elétrica",
+    "Administração",
+    "Direito",
+    "Medicina",
+    "Psicologia",
+    "Outro",
   ];
 
-  const periodos = ['1º', '2º', '3º', '4º', '5º', '6º', '7º', '8º', '9º', '10º'];
+  const periodos = [
+    "1º",
+    "2º",
+    "3º",
+    "4º",
+    "5º",
+    "6º",
+    "7º",
+    "8º",
+    "9º",
+    "10º",
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    
+
     // Limpar erro do campo quando usuário começar a digitar
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
@@ -55,39 +66,44 @@ const Register = () => {
     const newErrors = {};
 
     if (!formData.nome.trim()) {
-      newErrors.nome = 'Nome é obrigatório';
+      newErrors.nome = "Nome é obrigatório";
     } else if (formData.nome.trim().length < 2) {
-      newErrors.nome = 'Nome deve ter pelo menos 2 caracteres';
+      newErrors.nome = "Nome deve ter pelo menos 2 caracteres";
     }
 
     if (!formData.email) {
-      newErrors.email = 'Email é obrigatório';
+      newErrors.email = "Email é obrigatório";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email inválido';
-    } else if (!formData.email.includes('@univali.br') && !formData.email.includes('@edu.univali.br')) {
-      newErrors.email = 'Email deve ser institucional (@univali.br ou @edu.univali.br)';
+      newErrors.email = "Email inválido";
+    } else if (
+      !formData.email.includes("@alunos.unisanta.br") &&
+      !formData.email.includes("@edu.alunos.unisanta.br")
+    ) {
+      newErrors.email =
+        "Email deve ser institucional (@alunos.unisanta.br ou @edu.alunos.unisanta.br)";
     }
 
     if (!formData.curso) {
-      newErrors.curso = 'Curso é obrigatório';
+      newErrors.curso = "Curso é obrigatório";
     }
 
     if (!formData.periodo) {
-      newErrors.periodo = 'Período é obrigatório';
+      newErrors.periodo = "Período é obrigatório";
     }
 
     if (!formData.senha) {
-      newErrors.senha = 'Senha é obrigatória';
+      newErrors.senha = "Senha é obrigatória";
     } else if (formData.senha.length < 8) {
-      newErrors.senha = 'Senha deve ter pelo menos 8 caracteres';
+      newErrors.senha = "Senha deve ter pelo menos 8 caracteres";
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.senha)) {
-      newErrors.senha = 'Senha deve conter pelo menos: 1 letra minúscula, 1 maiúscula e 1 número';
+      newErrors.senha =
+        "Senha deve conter pelo menos: 1 letra minúscula, 1 maiúscula e 1 número";
     }
 
     if (!formData.confirmarSenha) {
-      newErrors.confirmarSenha = 'Confirmação de senha é obrigatória';
+      newErrors.confirmarSenha = "Confirmação de senha é obrigatória";
     } else if (formData.senha !== formData.confirmarSenha) {
-      newErrors.confirmarSenha = 'Senhas não coincidem';
+      newErrors.confirmarSenha = "Senhas não coincidem";
     }
 
     setErrors(newErrors);
@@ -96,28 +112,28 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setLoading(true);
-    
+
     const userData = {
       nome: formData.nome.trim(),
       email: formData.email,
       curso: formData.curso,
       periodo: formData.periodo,
       senha: formData.senha,
-      interesses: formData.interesses.trim()
+      interesses: formData.interesses.trim(),
     };
 
     const result = await register(userData);
-    
+
     if (result.success) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
-    
+
     setLoading(false);
   };
 
@@ -130,7 +146,9 @@ const Register = () => {
               <div className="text-center mb-4">
                 <i className="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
                 <h2 className="h4">Connexa</h2>
-                <p className="text-muted">Crie sua conta e comece a estudar em grupo</p>
+                <p className="text-muted">
+                  Crie sua conta e comece a estudar em grupo
+                </p>
               </div>
 
               <Form onSubmit={handleSubmit}>
@@ -159,7 +177,7 @@ const Register = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="seu.email@univali.br"
+                        placeholder="seu.email@alunos.unisanta.br"
                         isInvalid={!!errors.email}
                       />
                       <Form.Control.Feedback type="invalid">
@@ -180,8 +198,10 @@ const Register = () => {
                         isInvalid={!!errors.curso}
                       >
                         <option value="">Selecione seu curso</option>
-                        {cursos.map(curso => (
-                          <option key={curso} value={curso}>{curso}</option>
+                        {cursos.map((curso) => (
+                          <option key={curso} value={curso}>
+                            {curso}
+                          </option>
                         ))}
                       </Form.Select>
                       <Form.Control.Feedback type="invalid">
@@ -199,8 +219,10 @@ const Register = () => {
                         isInvalid={!!errors.periodo}
                       >
                         <option value="">Selecione seu período</option>
-                        {periodos.map(periodo => (
-                          <option key={periodo} value={periodo}>{periodo} período</option>
+                        {periodos.map((periodo) => (
+                          <option key={periodo} value={periodo}>
+                            {periodo} período
+                          </option>
                         ))}
                       </Form.Select>
                       <Form.Control.Feedback type="invalid">
@@ -259,24 +281,29 @@ const Register = () => {
                     placeholder="Ex: Programação, Matemática, Física, Literatura..."
                   />
                   <Form.Text className="text-muted">
-                    Descreva suas áreas de interesse para encontrar grupos relacionados
+                    Descreva suas áreas de interesse para encontrar grupos
+                    relacionados
                   </Form.Text>
                 </Form.Group>
 
                 <div className="d-grid mb-3">
-                  <Button 
-                    type="submit" 
-                    variant="primary" 
+                  <Button
+                    type="submit"
+                    variant="primary"
                     size="lg"
                     disabled={loading}
                   >
                     {loading ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
                         Criando conta...
                       </>
                     ) : (
-                      'Criar Conta'
+                      "Criar Conta"
                     )}
                   </Button>
                 </div>
@@ -286,7 +313,7 @@ const Register = () => {
 
               <div className="text-center">
                 <p className="mb-0">
-                  Já tem uma conta?{' '}
+                  Já tem uma conta?{" "}
                   <Link to="/login" className="text-decoration-none">
                     Faça login aqui
                   </Link>

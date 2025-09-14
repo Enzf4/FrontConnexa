@@ -5,12 +5,14 @@ Plataforma de grupos de estudo universitários desenvolvida em React com integra
 ## 🚀 Funcionalidades
 
 ### 🔐 Autenticação
-- **Login** com email institucional (@univali.br)
+
+- **Login** com email institucional (@alunos.unisanta.br)
 - **Cadastro** com validações completas
 - **Recuperação de senha** via email
 - **Validação de domínio** universitário em tempo real
 
 ### 👥 Grupos de Estudo
+
 - **Criar grupos** com informações detalhadas
 - **Buscar grupos** com filtros avançados (matéria, local, texto)
 - **Entrar/Sair** de grupos com confirmação
@@ -18,6 +20,7 @@ Plataforma de grupos de estudo universitários desenvolvida em React com integra
 - **Gerenciar participantes** (admin)
 
 ### 💬 Chat em Tempo Real
+
 - **Interface de chat** intuitiva
 - **Mensagens em tempo real** (via polling)
 - **Identificação de usuários** com foto e curso
@@ -25,6 +28,7 @@ Plataforma de grupos de estudo universitários desenvolvida em React com integra
 - **Validação de caracteres** (máx 1000)
 
 ### 👤 Perfil do Usuário
+
 - **Editar informações** pessoais
 - **Upload de foto** de perfil (JPG, PNG, GIF, WEBP)
 - **Validação de arquivos** (máx 5MB)
@@ -32,6 +36,7 @@ Plataforma de grupos de estudo universitários desenvolvida em React com integra
 - **Exclusão de conta** com confirmação
 
 ### 🔔 Sistema de Notificações
+
 - **Painel de notificações** completo
 - **Filtros por tipo** (mensagens, membros, alterações)
 - **Marcar como lida** individual ou em lote
@@ -39,6 +44,7 @@ Plataforma de grupos de estudo universitários desenvolvida em React com integra
 - **Estatísticas** detalhadas
 
 ### 📱 Design Responsivo
+
 - **Mobile-first** approach
 - **Bootstrap 5** para componentes
 - **Breakpoints** otimizados (320px, 768px, 1024px)
@@ -58,38 +64,44 @@ Plataforma de grupos de estudo universitários desenvolvida em React com integra
 ## 📦 Instalação
 
 ### Pré-requisitos
-- Node.js 16+ 
+
+- Node.js 16+
 - npm ou yarn
 - Backend Connexa rodando na porta 3001
 
 ### Passos
 
 1. **Clone o repositório**
+
 ```bash
 git clone <url-do-repositorio>
 cd connexa-frontend
 ```
 
 2. **Instale as dependências**
+
 ```bash
 npm install
 ```
 
 3. **Configure a API**
+
 ```javascript
 // src/services/api.js
 const api = axios.create({
-  baseURL: 'http://localhost:3001/api', // URL do seu backend
+  baseURL: "http://localhost:3001/api", // URL do seu backend
   // ...
 });
 ```
 
 4. **Execute a aplicação**
+
 ```bash
 npm start
 ```
 
 5. **Acesse no navegador**
+
 ```
 http://localhost:3000
 ```
@@ -128,7 +140,7 @@ A aplicação está configurada para se comunicar com o backend na porta 3001. P
 ```javascript
 // src/services/api.js
 const api = axios.create({
-  baseURL: 'http://localhost:3001/api', // Altere aqui
+  baseURL: "http://localhost:3001/api", // Altere aqui
   // ...
 });
 ```
@@ -136,18 +148,21 @@ const api = axios.create({
 ## 📱 Funcionalidades por Página
 
 ### Login (`/login`)
+
 - Validação de email institucional
 - Validação de senha (8+ caracteres)
 - Link para recuperação de senha
 - Redirecionamento automático após login
 
 ### Cadastro (`/register`)
+
 - Formulário completo com validações
 - Seleção de curso e período
 - Validação de senha forte
 - Campo de interesses opcional
 
 ### Dashboard (`/dashboard`)
+
 - Resumo da atividade do usuário
 - Cards de estatísticas
 - Grupos recentes
@@ -155,6 +170,7 @@ const api = axios.create({
 - Ações rápidas
 
 ### Grupos (`/groups`)
+
 - Lista de todos os grupos
 - Filtros de busca (matéria, local, texto)
 - Cards informativos
@@ -162,6 +178,7 @@ const api = axios.create({
 - Botão para criar grupo
 
 ### Criar Grupo (`/groups/create`)
+
 - Formulário detalhado
 - Validações completas
 - Seleção de matéria
@@ -169,6 +186,7 @@ const api = axios.create({
 - Configuração de local e limite
 
 ### Detalhes do Grupo (`/groups/:id`)
+
 - Informações completas
 - Lista de participantes
 - Ações (entrar/sair/deletar)
@@ -176,6 +194,7 @@ const api = axios.create({
 - Link para chat
 
 ### Chat (`/groups/:id/chat`)
+
 - Interface de mensagens
 - Envio em tempo real
 - Identificação de usuários
@@ -183,6 +202,7 @@ const api = axios.create({
 - Validação de caracteres
 
 ### Perfil (`/profile`)
+
 - Edição de informações
 - Upload de foto
 - Preview da imagem
@@ -190,6 +210,7 @@ const api = axios.create({
 - Exclusão de conta
 
 ### Notificações (`/notifications`)
+
 - Lista de notificações
 - Filtros por tipo
 - Ações em lote
@@ -199,6 +220,7 @@ const api = axios.create({
 ## 🎨 Design System
 
 ### Cores Principais
+
 - **Primary**: #3498db (Azul)
 - **Success**: #27ae60 (Verde)
 - **Warning**: #f39c12 (Amarelo)
@@ -206,6 +228,7 @@ const api = axios.create({
 - **Info**: #17a2b8 (Ciano)
 
 ### Componentes
+
 - **Cards**: Sombra sutil, hover effects
 - **Botões**: Estados de loading, ícones
 - **Formulários**: Validação visual, feedback
@@ -238,11 +261,13 @@ npm test
 ## 🚀 Deploy
 
 ### Build para produção
+
 ```bash
 npm run build
 ```
 
 ### Servir arquivos estáticos
+
 ```bash
 # Usando serve
 npx serve -s build
@@ -256,6 +281,7 @@ npx serve -s build
 A aplicação se integra completamente com a API Connexa seguindo as melhores práticas:
 
 ### ✅ **Serviços Organizados**
+
 ```
 src/services/
 ├── api.js                    # Configuração base do Axios
@@ -267,6 +293,7 @@ src/services/
 ```
 
 ### ✅ **Hooks Personalizados**
+
 ```
 src/hooks/
 ├── useAuth.js              # Autenticação
@@ -275,6 +302,7 @@ src/hooks/
 ```
 
 ### ✅ **Funcionalidades Integradas**
+
 - **Autenticação**: JWT tokens com interceptors automáticos
 - **Grupos**: CRUD completo com filtros avançados
 - **Chat**: Mensagens em tempo real via polling
